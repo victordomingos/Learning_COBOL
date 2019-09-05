@@ -1,9 +1,9 @@
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. ADD-FUNCTION.
+       PROGRAM-ID. CALCS1.
       *=================================================================
-      * Purpose: ADD function
+      * Purpose: Perform some basic calcs v.1
       * Author:  Victor Domingos
-      * Date:    2019-09-03
+      * Date:    2019-09-05
       * License: MIT
       *=================================================================
        ENVIRONMENT DIVISION.
@@ -67,4 +67,4 @@
            DISPLAY "NOTE HOW ROUNDING WAS MADE JUST IN THE END".
            STOP RUN.
 
-       END PROGRAM ADD-FUNCTION.
+       END PROGRAM CALCS1.
