@@ -22,20 +22,22 @@
 
       *-----------------------------------------------------------------
        WORKING-STORAGE SECTION.
-       77  X   PIC 9(13)   VALUE 0.
+       77  X   PIC 9(11)V9   VALUE 0.
            88  MAGIC-X     VALUE 666.
-       77  XM  PIC Z(12)9.
+       77  XM  PIC Z(10)9.9.
 
-       77  Y   PIC 9(13)   VALUE 0.
+       77  Y   PIC 9(11)V9   VALUE 0.
            88  MAGIC-Y     VALUE 666.
-       77  YM  PIC Z(12)9.
+       77  YM  PIC Z(10)9.9.
 
-       77  R   PIC 9(13)   VALUE 0.
+       77  R   PIC 9(11)V9   VALUE 0.
            88  MAGIC-R     VALUE 666.
-       77  RM  PIC Z(12)9.
+       77  RM  PIC Z(12)9.9.
 
        77  N   PIC 999 VALUE 0.
        77  OP  PIC X.
+
+       77  NOME PIC X(32)  VALUE " ".
 
 
       *=================================================================
@@ -44,7 +46,9 @@
        MAIN-PROCEDURE.
            PERFORM HEAD-PROCEDURE.
            STARTPOSITION.
-           PERFORM INPUT-PROCEDURE.
+           PERFORM ASK-NAME-PROCEDURE.
+           PERFORM INPUT-PROCEDURE-A.
+           PERFORM INPUT-PROCEDURE-B.
            PERFORM MENU-PROCEDURE.
            PERFORM CALC-PROCEDURE.
            PERFORM FIND-MAGIC-PROCEDURE.
@@ -77,12 +81,30 @@
            DISPLAY " ".
 
 
-       INPUT-PROCEDURE.
-           DISPLAY "X?"
-           ACCEPT X
+       ASK-NAME-PROCEDURE.
+           ACCEPT NOME
+           DISPLAY "HI " NOME.
+           IF NOME NOT ALPHABETIC
+               PERFORM ASK-NAME-PROCEDURE
+           END-IF.
 
-           DISPLAY "Y?"
-           ACCEPT Y.
+
+       INPUT-PROCEDURE-A.
+           DISPLAY "Please enter a number:"
+           ACCEPT X
+           IF X > 999999999
+                 DISPLAY "INVALID ENTRY!"
+                 PERFORM INPUT-PROCEDURE-A
+           END-IF.
+
+
+       INPUT-PROCEDURE-B.
+           DISPLAY "Please enter another:"
+           ACCEPT Y
+           IF Y IS ALPHABETIC
+               DISPLAY "INVALID ENTRY!"
+               PERFORM INPUT-PROCEDURE-B
+           END-IF.
 
 
        FIND-MAGIC-PROCEDURE.
