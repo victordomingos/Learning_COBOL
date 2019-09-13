@@ -22,17 +22,17 @@
 
       *-----------------------------------------------------------------
        WORKING-STORAGE SECTION.
-       77  X   PIC 9(11)V9   VALUE 0.
+       77  X   PIC S9(11)V9   VALUE 0.
            88  MAGIC-X     VALUE 666.
-       77  XM  PIC Z(10)9.9.
+       77  XM  PIC -Z(10)9.9.
 
-       77  Y   PIC 9(11)V9   VALUE 0.
+       77  Y   PIC S9(11)V9   VALUE 0.
            88  MAGIC-Y     VALUE 666.
-       77  YM  PIC Z(10)9.9.
+       77  YM  PIC -Z(10)9.9.
 
-       77  R   PIC 9(11)V9   VALUE 0.
+       77  R   PIC S9(11)V9   VALUE 0.
            88  MAGIC-R     VALUE 666.
-       77  RM  PIC Z(12)9.9.
+       77  RM  PIC -Z(10)9.9.
 
        77  N   PIC 999 VALUE 0.
        77  OP  PIC X.
@@ -82,8 +82,9 @@
 
 
        ASK-NAME-PROCEDURE.
+           DISPLAY "Please type your name:"
            ACCEPT NOME
-           DISPLAY "HI " NOME.
+           DISPLAY "Hi, " NOME.
            IF NOME NOT ALPHABETIC
                PERFORM ASK-NAME-PROCEDURE
            END-IF.
@@ -144,7 +145,7 @@
            DISPLAY " "
            DISPLAY " " XM
            DISPLAY OP YM
-           DISPLAY "--------------"
+           DISPLAY "---------------"
            DISPLAY " " RM.
 
 
