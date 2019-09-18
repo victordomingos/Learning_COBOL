@@ -19,7 +19,6 @@
        PROCEDURE DIVISION.
        MAIN-PROCEDURE.
 
-
            INICIO.
            MOVE 0 TO ESTADO.
            DISPLAY SPACE ERASE EOS.
@@ -39,10 +38,8 @@
            END-IF.
 
 
-           PERFORM MENU-PROCEDURE.
-
-
            OPCAO.
+           PERFORM MENU-PROCEDURE.
            IF ESTADO = 1
                PERFORM MOVEUP-PROCEDURE
            END-IF.
@@ -98,6 +95,7 @@
 
 
        COMPUTE-PROCEDURE.
+           MOVE 1 TO ESTADO.
            EVALUATE menu-input
                WHEN "+"
                    ADD N1 N2 GIVING NT
@@ -132,18 +130,29 @@
 
 
        MOVEUP-PROCEDURE.
-           DISPLAY "                            " AT 0728.
-           DISPLAY "                            " AT 0828.
+           DISPLAY "                          " AT 0728.
+           DISPLAY "                          " AT 0828.
            DISPLAY "                            " AT 0926.
 
-           MOVE N2 TO N1
-           MOVE N1 TO MASK
+           MOVE N2 TO MASK.
            DISPLAY MASK AT 0728.
 
-           MOVE NT TO N2
-           MOVE N2 TO MASK
+           MOVE NT TO N1.
+           MOVE NT TO MASK.
            DISPLAY MASK AT 0828.
 
+
+       DEBUG-PROCEDURE.
+           DISPLAY "                               " AT 1400.
+           DISPLAY "                               " AT 1500.
+           DISPLAY "                               " AT 1600.
+           DISPLAY "                               " AT 1700.
+           DISPLAY "                               " AT 1800.
+           DISPLAY N1 AT 1400.
+           DISPLAY N2 AT 1500.
+           DISPLAY NT AT 1600.
+           DISPLAY MASK AT 1700.
+           DISPLAY ESTADO AT 1800.
 
 
        MENU-PROCEDURE.
