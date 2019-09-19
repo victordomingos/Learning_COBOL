@@ -1,5 +1,5 @@
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. PROGRAMNAME.
+       PROGRAM-ID. NOTAS.
       *=================================================================
       * Purpose:
       * Author:  Victor Domingos
@@ -22,14 +22,24 @@
       *-----------------------------------------------------------------
        WORKING-STORAGE SECTION.
        77  NOME    PIC A(20)   VALUE SPACES.
-       77  NOTA1   PIC S99      VALUE -1.
-       77  NOTA2   PIC S99      VALUE -1.
-       77  NOTA3   PIC S99      VALUE -1.
-       77  NOTA4   PIC S99      VALUE -1.
+
+       77  NOTA1   PIC 99      VALUE 21.
+       77  NOTA2   PIC 99      VALUE 21.
+       77  NOTA3   PIC 99      VALUE 21.
+       77  NOTA4   PIC 99      VALUE 21.
+       77  EXAME   PIC 99      VALUE 21.
+       77  IN-NOTA PIC Z9.
 
        77  MEDIA   PIC 99V99   VALUE ZERO.
+       77  NOTA-F  PIC 99V99   VALUE ZERO.
        77  NOTA-M  PIC Z9.9    VALUE ZERO.
 
+       01  HOJE.
+           02  ANO PIC 99      VALUE ZERO.
+           02  MES PIC 99      VALUE ZERO.
+           02  DIA PIC 99      VALUE ZERO.
+
+       77  SP    PIC A(1)      VALUE SPACE.
       *=================================================================
        PROCEDURE DIVISION.
 
@@ -42,29 +52,34 @@
 
 
        INPUT-PROCEDURE.
+           DISPLAY SPACE ERASE EOS.
            PERFORM UNTIL (NOME ALPHABETIC) AND (NOME NOT = SPACES)
-               DISPLAY "Por favor, introduza o nome do formando:"
-               ACCEPT NOME
+               DISPLAY "Por favor, introduza o nome:" AT 1101
+               ACCEPT NOME AT 1130
            END-PERFORM.
 
            PERFORM UNTIL (NOTA1 >= 0) AND (NOTA1 <= 20)
-               DISPLAY "Por favor, introduza a nota 1:"
-               ACCEPT NOTA1
+               DISPLAY "Por favor, introduza a nota 1:" AT 1301
+               ACCEPT IN-NOTA AT 1332
+               MOVE IN-NOTA TO NOTA1
            END-PERFORM.
 
            PERFORM UNTIL (NOTA2 >= 0) AND (NOTA2 <= 20)
-               DISPLAY "Por favor, introduza a nota 2:"
-               ACCEPT NOTA2
+               DISPLAY "Por favor, introduza a nota 2:" AT 1401
+               ACCEPT IN-NOTA AT 1432
+               MOVE IN-NOTA TO NOTA2
            END-PERFORM.
 
            PERFORM UNTIL (NOTA3 >= 0) AND (NOTA3 <= 20)
-               DISPLAY "Por favor, introduza a nota 3:"
-               ACCEPT NOTA3
+               DISPLAY "Por favor, introduza a nota 3:" AT 1501
+               ACCEPT IN-NOTA AT 1532
+               MOVE IN-NOTA TO NOTA3
            END-PERFORM.
 
            PERFORM UNTIL (NOTA4 >= 0) AND (NOTA4 <= 20)
-               DISPLAY "Por favor, introduza a nota 4:"
-               ACCEPT NOTA4
+               DISPLAY "Por favor, introduza a nota 4:" AT 1601
+               ACCEPT IN-NOTA AT 1632
+               MOVE IN-NOTA TO NOTA4
            END-PERFORM.
 
 
@@ -74,28 +89,64 @@
 
 
        REPORT-PROCEDURE.
-           DISPLAY " "
+           DISPLAY SPACE ERASE EOS.
+           ACCEPT HOJE FROM DATE.
+           DISPLAY DIA AT 0101
+           DISPLAY "/" AT 0103
+           DISPLAY MES AT 0104
+           DISPLAY "/" AT 0106
+           DISPLAY ANO AT 0107
+
+           DISPLAY NOME AT 0110
+
            MOVE NOTA1 TO NOTA-M
-           DISPLAY "   N1: " NOTA-M.
+           DISPLAY "N1:" AT 0303
+           NOTA-M AT 0307
 
            MOVE NOTA2 TO NOTA-M
-           DISPLAY "   N2: " NOTA-M.
+           DISPLAY "N2:" AT 0403
+           NOTA-M AT 0407
 
            MOVE NOTA3 TO NOTA-M
-           DISPLAY "   N3: " NOTA-M.
+           DISPLAY "N3:" AT 0503
+           NOTA-M AT 0507
 
            MOVE NOTA4 TO NOTA-M
-           DISPLAY "   N4: " NOTA-M.
+           DISPLAY "N4:" AT 0603
+           NOTA-M AT 0607
 
-           DISPLAY " "
+
            MOVE MEDIA TO NOTA-M.
-           DISPLAY "Media: " NOTA-M " valores.".
-           IF MEDIA < 10
-               DISPLAY "REPROVADO"
-           ELSE
-               DISPLAY "APROVADO"
+           DISPLAY "Media: " AT 0801
+           DISPLAY NOTA-M AT 0808
+
+           IF MEDIA >= 10
+               DISPLAY "APROVADO" AT 0901
+               ACCEPT SP AT 2001
+               STOP RUN
            END-IF.
-           DISPLAY " ".
+      *    ==========se aprovado acaba aqui=============================
+
+           DISPLAY "Media inferior a 10 (REPROVADO)." AT 0901
+           PERFORM UNTIL (EXAME >= 0) AND (EXAME <= 20)
+               DISPLAY "Por favor, introduza a nota do exame:" AT 1001
+               ACCEPT IN-NOTA AT 1039
+               MOVE IN-NOTA TO EXAME
+           END-PERFORM.
+
+           COMPUTE NOTA-F = (MEDIA + EXAME)/2.
+           MOVE NOTA-F TO NOTA-M
+
+           DISPLAY "Nota final: " AT 1201
+           DISPLAY NOTA-M AT 1213
+
+           IF NOTA-F < 10
+               DISPLAY "== REPROVADO ==" AT 1301
+           ELSE
+               DISPLAY "== APROVADO ==" AT 1301
+           END-IF.
+
+           ACCEPT SP AT 2001.
 
 
-       END PROGRAM PROGRAMNAME.
+       END PROGRAM NOTAS.
