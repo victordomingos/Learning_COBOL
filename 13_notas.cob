@@ -30,6 +30,7 @@
 
       * numero de faltas:
        77  NFALTAS PIC S99     VALUE -1.
+       77  NFALTAS-M PIC Z9.
        77  EXAME   PIC 99      VALUE 21.
        77  IN-NOTA PIC Z9.
 
@@ -62,21 +63,18 @@
 
            IF NFALTAS > 25  OR  NFALTAS/2 > MEDIA
                PERFORM BAD-STUDENT-REPORT
-               GO TO 666
+           ELSE
+               IF MEDIA < 10
+                   PERFORM EXAM-INPUT-PROCEDURE
+                   PERFORM EXAM-REPORT-PROCEDURE
+               ELSE
+                   DISPLAY "APROVADO." AT 0901
+               END-IF
            END-IF.
 
-           PERFORM EXAM-REPORT-PROCEDURE.
-           DISPLAY "FALTAS: " AT 0901
-           DISPLAY NFALTAS AT 0909
-
-           GO TO 666.
-
-
       * Esperar que o utilizador leia e terminar apos pressionar ENTER:
-           666.
            ACCEPT SP AT 2001
            STOP RUN.
-
 
 
        INPUT-PROCEDURE.
@@ -149,42 +147,40 @@
            DISPLAY "N4:" AT 0603
            NOTA-M AT 0607
 
-
            MOVE MEDIA TO NOTA-M.
-           DISPLAY "Media: " AT 0801
+           DISPLAY "Media:" AT 0801
            DISPLAY NOTA-M AT 0808.
 
 
        BAD-STUDENT-REPORT.
-           DISPLAY "REPROVADO POR FALTAS, COM NOTA DE " AT 0901
+           DISPLAY "REPROVADO POR FALTAS, COM NOTA DE" AT 1001
            MOVE M-FALTAS TO NOTA-M
-           DISPLAY NOTA-M AT 1001
-           DISPLAY "Numero de faltas: " AT 1101
-           DISPLAY NFALTAS AT 1119
+           DISPLAY NOTA-M AT 1036
+           DISPLAY "Numero de faltas:" AT 1101
+           MOVE NFALTAS TO NFALTAS-M
+           DISPLAY NFALTAS-M AT 1119
            DISPLAY "NAO TEM OPCAO DE EXAME." AT 1201.
 
 
-       EXAM-REPORT-PROCEDURE.
+       EXAM-INPUT-PROCEDURE.
            PERFORM UNTIL (EXAME >= 0) AND (EXAME <= 20)
                DISPLAY "P/favor, introduza a nota do exame:" AT 1001
                ACCEPT IN-NOTA AT 1039
                MOVE IN-NOTA TO EXAME
-           END-PERFORM
+           END-PERFORM.
 
+
+       EXAM-REPORT-PROCEDURE.
            COMPUTE NOTA-F = (MEDIA + EXAME)/2
            MOVE NOTA-F TO NOTA-M
-
-
            DISPLAY "Nota final: " AT 1201
            DISPLAY NOTA-M AT 1213
-
 
            IF NOTA-F < 10
                DISPLAY "== REPROVADO ==" AT 1301
            ELSE
                DISPLAY "== APROVADO ==" AT 1301
            END-IF.
-           GO TO 666.
 
 
        END PROGRAM NOTAS.
