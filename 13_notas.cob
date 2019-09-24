@@ -27,16 +27,20 @@
        77  NOTA2   PIC 99      VALUE 21.
        77  NOTA3   PIC 99      VALUE 21.
        77  NOTA4   PIC 99      VALUE 21.
+
+      * numero de faltas:
        77  NFALTAS PIC S99     VALUE -1.
        77  EXAME   PIC 99      VALUE 21.
        77  IN-NOTA PIC Z9.
 
        77  MEDIA   PIC 99V99   VALUE ZERO.
        77  NOTA-F  PIC 99V99   VALUE ZERO.
-       77  NOTA-M  PIC Z9.9    VALUE ZERO.
 
-      * média ponderada com as faltas:
-       77  M-FALTAS PIC 99V99   VALUE ZERO.
+      * mascara de formatacao para I/O de notas com casas decimais:
+       77  NOTA-M  PIC -Z9.9    VALUE ZERO.
+
+      * media ponderada com as faltas:
+       77  M-FALTAS PIC S99V99   VALUE ZERO.
 
        01  HOJE.
            02  ANO PIC 99      VALUE ZERO.
@@ -50,8 +54,25 @@
        MAIN-PROCEDURE.
            PERFORM INPUT-PROCEDURE.
            PERFORM CALC-AVG-PROCEDURE.
-           PERFORM REPORT-PROCEDURE.
+           PERFORM EARLY-REPORT-PROCEDURE.
 
+           IF MEDIA < 10
+               DISPLAY "Media inferior a 10 (REPROVADO)." AT 0901
+           END-IF.
+
+           IF NFALTAS > 25  OR  NFALTAS/2 > MEDIA
+               PERFORM BAD-STUDENT-REPORT
+               GO TO 666
+           END-IF.
+
+           PERFORM EXAM-REPORT-PROCEDURE.
+           DISPLAY "FALTAS: " AT 0901
+           DISPLAY NFALTAS AT 0909
+
+           GO TO 666.
+
+
+      * Esperar que o utilizador leia e terminar apos pressionar ENTER:
            666.
            ACCEPT SP AT 2001
            STOP RUN.
@@ -98,10 +119,10 @@
 
        CALC-AVG-PROCEDURE.
            COMPUTE MEDIA = (NOTA1+NOTA2+NOTA3+NOTA4)/4
-           COMPUTE M-FALTAS = MEDIA-(2*NFALTAS).
+           COMPUTE M-FALTAS = MEDIA-(NFALTAS/2).
 
 
-       REPORT-PROCEDURE.
+       EARLY-REPORT-PROCEDURE.
            DISPLAY SPACE ERASE EOS.
            ACCEPT HOJE FROM DATE.
            DISPLAY DIA AT 0101
@@ -131,38 +152,19 @@
 
            MOVE MEDIA TO NOTA-M.
            DISPLAY "Media: " AT 0801
-           DISPLAY NOTA-M AT 0808
+           DISPLAY NOTA-M AT 0808.
 
 
-           IF MEDIA < 10
-               DISPLAY "Media inferior a 10 (REPROVADO)." AT 0901
-               GO TO 666
-           END-IF.
-
-           IF NFALTAS > (MEDIA * 2)
-               DISPLAY "REPROVADO POR FALTAS, COM NOTA DE " AT 0901
-               DISPLAY M-FALTAS AT 1001
-               GO TO 666
-           END-IF.
-
-           IF NFALTAS > 25
-               DISPLAY "REPROVADO POR FALTAS, COM NOTA DE " AT 0901
-               DISPLAY M-FALTAS AT 1001
-               DISPLAY "Numero de faltas: " AT 1101
-               DISPLAY NFALTAS AT 1201
-               GO TO 666
-           END-IF.
+       BAD-STUDENT-REPORT.
+           DISPLAY "REPROVADO POR FALTAS, COM NOTA DE " AT 0901
+           MOVE M-FALTAS TO NOTA-M
+           DISPLAY NOTA-M AT 1001
+           DISPLAY "Numero de faltas: " AT 1101
+           DISPLAY NFALTAS AT 1119
+           DISPLAY "NAO TEM OPCAO DE EXAME." AT 1201.
 
 
-           IF MEDIA >= 10
-               DISPLAY NFALTAS AT 0901
-               DISPLAY "FALTAS" AT 0904
-               GO TO 666
-           END-IF.
-
-
-
-
+       EXAM-REPORT-PROCEDURE.
            PERFORM UNTIL (EXAME >= 0) AND (EXAME <= 20)
                DISPLAY "P/favor, introduza a nota do exame:" AT 1001
                ACCEPT IN-NOTA AT 1039
@@ -177,16 +179,12 @@
            DISPLAY NOTA-M AT 1213
 
 
-
            IF NOTA-F < 10
                DISPLAY "== REPROVADO ==" AT 1301
            ELSE
                DISPLAY "== APROVADO ==" AT 1301
            END-IF.
-
-           ACCEPT SP AT 2001.
-
-
+           GO TO 666.
 
 
        END PROGRAM NOTAS.
