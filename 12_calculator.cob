@@ -48,14 +48,15 @@
 
            EVALUATE menu-input
                WHEN "S"
-                   PERFORM EXIT-PROCEDURE
+                   GO TO SAIDA
                WHEN "s"
-                   PERFORM EXIT-PROCEDURE
+                   GO TO SAIDA
                WHEN "C"
                    PERFORM CLEAR-SCREEN-PROCEDURE
                WHEN "c"
                    PERFORM CLEAR-SCREEN-PROCEDURE
            END-EVALUATE.
+
 
            DISPLAY menu-input at 0826.
 
@@ -74,9 +75,9 @@
 
            EVALUATE menu-input
                WHEN "S"
-                   PERFORM EXIT-PROCEDURE
+                   GO TO SAIDA
                WHEN "s"
-                   PERFORM EXIT-PROCEDURE
+                   GO TO SAIDA
                WHEN "C"
                    PERFORM CLEAR-SCREEN-PROCEDURE
                WHEN "c"
@@ -92,6 +93,15 @@
                WHEN OTHER
                    go to OPCAO
            END-EVALUATE.
+
+
+
+           SAIDA.
+           DISPLAY SPACE ERASE EOS.
+           DISPLAY "Bye!" AT 1108
+           ACCEPT menu-input AT 1208
+           STOP RUN.
+
 
 
        COMPUTE-PROCEDURE.
@@ -118,11 +128,6 @@
            GO TO OPCAO.
            STOP RUN.
 
-
-       EXIT-PROCEDURE.
-           DISPLAY "Bye!" AT 1108.
-           STOP " ".
-           STOP RUN.
 
 
        CLEAR-SCREEN-PROCEDURE.
